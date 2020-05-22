@@ -1,57 +1,12 @@
-const tmi = require("tmi.js");
 const rp = require("request-promise");
 const $ = require("cheerio");
 const fs = require('fs');
 const moment = require('moment');
-const gofundme_url = 'https://www.gofundme.com/f/gu9tre-trying-to-escape';
+const gofundme_url = 'https://www.gofundme.com/f/gu9tre-trying-to-escape';  // Replace with your link
 
-const opts = JSON.parse(fs.readFileSync("credentials.json"));
-
-// Create client 
-const client = new tmi.client(opts);
-
-// Register event handlers (defined below)
-client.on('message', onMessageHandler);
-client.on('connected', onConnectHandler);
-
-// Connect to Twitch
-client.connect()
-    .then(main);
-
-function onConnectHandler(addr, port) {
-    log(`* Connected to ${addr}:${port}`)
-}
-
-function onMessageHandler(target, context, msg, self) {
-    if (self) return;
-
-    const commandName = msg.trim().split(' ')[0];
-
-    if (commandName === "!dice") {
-        const num = rollDice();
-        client.say(target, `You rolled a ${num}`)
-            .then((data) => {
-                log(`Message sent! Data: ${data}`);
-            })
-            .catch(err => {
-                log(`Error: ${err}`);
-            });
-        log(`* Executed ${commandName} command`);
-    } else {
-        log(`* Unknown command ${commandName}`);
-    }
-}
-
-// Function called when the "dice" command is issued
-function rollDice() {
-    const sides = 6;
-    return Math.floor(Math.random() * sides) + 1;
-}
-
-function main() {
-    checkDonoAndAlertIfNew();
-    setInterval(checkDonoAndAlertIfNew, 60000);
-}
+checkDonoAndAlertIfNew();  // Initial check
+const N = 60;  // N = seconds between the checks
+setInterval(checkDonoAndAlertIfNew, N * 1000);  // Then check every N seconds
 
 function checkDonoAndAlertIfNew() {
     var lastDonator = null;
@@ -88,8 +43,6 @@ function checkDonoAndAlertIfNew() {
                 lastDonation = newDono;
 
                 log("* Found new donation!");
-
-                client.say("#Nyvena", `GoFundMe: ${lastDonator} just donated ${lastDonation}!`);
 
                 fs.writeFileSync('lastdono.json', JSON.stringify({
                     lastDonator,

@@ -5,7 +5,7 @@ const moment = require('moment');
 const gofundme_url = 'https://www.gofundme.com/f/gu9tre-trying-to-escape';  // Replace with your link
 
 checkDonoAndAlertIfNew();  // Initial check
-const N = 60;  // N = seconds between the checks
+const N = 60;  // N = seconds between the checks. Do NOT set lower than 5.
 setInterval(checkDonoAndAlertIfNew, N * 1000);  // Then check every N seconds
 
 function checkDonoAndAlertIfNew() {
@@ -49,7 +49,7 @@ function checkDonoAndAlertIfNew() {
                     lastDonation
                 }));
             } else
-                log("* It's not new, aborting...");
+                log("* It's not new.");
 
         })
 }

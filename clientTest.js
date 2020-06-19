@@ -1,5 +1,5 @@
 const WebSocket = require('ws');
-const url = "ws://localhost:8080";
+const url = "ws://localhost:8080"
 
 const connection = new WebSocket(url);
 
